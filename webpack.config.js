@@ -1,32 +1,35 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: {
-    index: './src/index.js',
-    print: './src/print.js',
-  },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      title: '管理输出',
-    })
-  ],
+  entry: "./src/app/index.js",
+  mode: "development",
   output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, "./dist"),
+    filename: "[name].js",
+  },
+  resolve: {
+    alias: {
+      'pages': path.join(__dirname, './src/app/pages')
+    }
   },
   module: {
     rules: [
       {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
+        test: /\.(js|jsx)$/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            // presets: ["@babel/preset-env", "@babel/preset-react"],
+          },
+        },
+        exclude: /node_modules/,
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+    }),
+  ],
 };
